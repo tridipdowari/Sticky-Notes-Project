@@ -2,7 +2,7 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Segoe UI', sans-serif;
-  background-color: #fff9f2;
+  background-color: #FDF6F0;
 }
 
 .app {
@@ -12,26 +12,23 @@ body {
 
 h1 {
   color: #4A4A4A;
-  margin-bottom: 1.5rem;
-  font-size: 2.5rem;
+  margin-bottom: 1rem;
 }
 
 .input-container {
   display: flex;
   justify-content: center;
-  align-items: center;
   gap: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 input {
   padding: 10px;
-  border: 2px solid #FFD6D6;
+  border: 2px solid #FFB6B9;
   border-radius: 8px;
   width: 250px;
   background-color: #fff;
   font-size: 16px;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
 }
 
 button {
@@ -52,56 +49,75 @@ button:hover {
 .note-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.2rem;
+  gap: 1rem;
   justify-content: center;
 }
 
 .note {
-  background-color: #fff8dc;
-  padding: 1.2rem;
+  background-color: #FFE6E6;
+  padding: 1rem;
   border-radius: 12px;
-  width: 220px;
-  height: 180px;
-  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.15);
+  width: 200px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: left;
   word-wrap: break-word;
   position: relative;
-  overflow-wrap: break-word;
-  font-size: 1rem;
-  line-height: 1.5;
-  transition: transform 0.2s ease;
 }
 
-.note:hover {
-  transform: rotate(-1deg) scale(1.02);
-}
-
-.note:nth-child(4n+1) { background-color: #fff8dc; }
-.note:nth-child(4n+2) { background-color: #e0f7fa; }
-.note:nth-child(4n+3) { background-color: #fbe7c6; }
-.note:nth-child(4n+4) { background-color: #e4f9d3; }
+.note:nth-child(4n+1) { background-color: #FFE6E6; }
+.note:nth-child(4n+2) { background-color: #E3F6F5; }
+.note:nth-child(4n+3) { background-color: #FFF5BA; }
+.note:nth-child(4n+4) { background-color: #D2F6C5; }
 
 .note p {
-  margin: 0;
+  margin: 0 0 1rem 0;
   color: #333;
-  padding-right: 1.5rem;
-  word-break: break-word;
+}
+
+.note textarea {
+  width: 100%;
+  height: 80px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 8px;
+  font-family: inherit;
+  resize: none;
+  margin-bottom: 0.5rem;
 }
 
 .note button {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background-color: #ff6b6b;
+  margin-right: 0.5rem;
+  padding: 5px 10px;
   font-size: 0.8rem;
-  padding: 4px 8px;
-  border: none;
-  border-radius: 6px;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  background-color: #FF6B6B;
+}
+
+.note button:last-child {
+  background-color: #6C63FF;
 }
 
 .note button:hover {
-  background-color: #ff3b3b;
+  opacity: 0.9;
+}
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.search-container input {
+  width: 300px;
+  padding: 12px 16px;
+  font-size: 16px;
+  border: 1.5px solid #ccc;
+  border-radius: 10px;
+  outline: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.search-container input:focus {
+  border-color: #5e60ce;
+  box-shadow: 0 0 0 3px rgba(94, 96, 206, 0.2);
 }

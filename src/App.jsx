@@ -1,51 +1,63 @@
-import React, { useState, useEffect } from 'react';
-import NoteList from './components/NoteList';
+import React, { useState } from 'react';
 import './App.css';
+import NoteList from './components/NoteList';
 
 function App() {
   const [notes, setNotes] = useState([]);
-  const [noteText, setNoteText] = useState('');
-
-  useEffect(() => {
-    const storedNotes = localStorage.getItem('stickyNotes');
-    if (storedNotes) setNotes(JSON.parse(storedNotes));
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('stickyNotes', JSON.stringify(notes));
-  }, [notes]);
+  const [input, setInput] = useState('');
+  const [search, setSearch] = useState('');
 
   const addNote = () => {
-    if (noteText.trim() === '') return;
-    const newNote = { id: Date.now(), text: noteText };
-    setNotes([newNote, ...notes]);
-    setNoteText('');
+    if (input.trim()) {
+      setNotes([...notes, { id: Date.now(), text: input }]);
+      setInput('');
+    }
   };
 
   const deleteNote = (id) => {
-    setNotes(notes.filter(note => note.id !== id));
+    setNotes(notes.filter((note) => note.id !== id));
   };
 
   const editNote = (id, newText) => {
-    const updatedNotes = notes.map(note =>
-      note.id === id ? { ...note, text: newText } : note
+    setNotes(
+      notes.map((note) =>
+        note.id === id ? { ...note, text: newText } : note
+      )
     );
-    setNotes(updatedNotes);
   };
+
+  const filteredNotes = notes.filter((note) =>
+    note.text.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <div className="app">
       <h1>Sticky Notes</h1>
+
       <div className="input-container">
         <input
           type="text"
-          value={noteText}
-          onChange={(e) => setNoteText(e.target.value)}
-          placeholder="Write your note..."
+          placeholder="Write a note..."
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
         />
         <button onClick={addNote}>Add</button>
       </div>
-      <NoteList notes={notes} onDelete={deleteNote} onEdit={editNote} />
+
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Search notes..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+
+      <NoteList
+        notes={filteredNotes}
+        onDelete={deleteNote}
+        onEdit={editNote}
+      />
     </div>
   );
 }
