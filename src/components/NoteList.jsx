@@ -1,11 +1,11 @@
-import React from "react";
-import Note from "./Note";
+import React from 'react';
+import Note from './Note';
 
-const NoteList = ({ notes, onDelete }) => {
+const NoteList = ({ notes, onDelete, onEdit }) => {
   return (
     <div className="note-list">
       {notes.map((note) => (
-        <Note key={note.id} note={note} onDelete={onDelete} />
+        <Note key={note.id} note={note} onDelete={onDelete} onEdit={onEdit} />
       ))}
     </div>
   );

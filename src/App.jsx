@@ -1,42 +1,51 @@
-import React, { useState } from "react";
-import NoteList from "./components/NoteList";
-import "./App.css";
+import React, { useState, useEffect } from 'react';
+import NoteList from './components/NoteList';
+import './App.css';
 
 function App() {
-  const [noteInput, setNoteInput] = useState("");
   const [notes, setNotes] = useState([]);
+  const [noteText, setNoteText] = useState('');
+
+  useEffect(() => {
+    const storedNotes = localStorage.getItem('stickyNotes');
+    if (storedNotes) setNotes(JSON.parse(storedNotes));
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem('stickyNotes', JSON.stringify(notes));
+  }, [notes]);
 
   const addNote = () => {
-    if (noteInput.trim() === "") return;
-
-    const newNote = {
-      id: Date.now(),
-      text: noteInput,
-    };
-
-    setNotes([...notes, newNote]);
-    setNoteInput("");
+    if (noteText.trim() === '') return;
+    const newNote = { id: Date.now(), text: noteText };
+    setNotes([newNote, ...notes]);
+    setNoteText('');
   };
 
   const deleteNote = (id) => {
-    setNotes(notes.filter((note) => note.id !== id));
+    setNotes(notes.filter(note => note.id !== id));
+  };
+
+  const editNote = (id, newText) => {
+    const updatedNotes = notes.map(note =>
+      note.id === id ? { ...note, text: newText } : note
+    );
+    setNotes(updatedNotes);
   };
 
   return (
     <div className="app">
       <h1>Sticky Notes</h1>
-
       <div className="input-container">
         <input
           type="text"
-          placeholder="Type a note..."
-          value={noteInput}
-          onChange={(e) => setNoteInput(e.target.value)}
+          value={noteText}
+          onChange={(e) => setNoteText(e.target.value)}
+          placeholder="Write your note..."
         />
         <button onClick={addNote}>Add</button>
       </div>
-
-      <NoteList notes={notes} onDelete={deleteNote} />
+      <NoteList notes={notes} onDelete={deleteNote} onEdit={editNote} />
     </div>
   );
 }
