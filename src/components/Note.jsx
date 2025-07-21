@@ -1,35 +1,40 @@
 import React, { useState } from 'react';
 
-function Note({ id, text, onDelete, onEdit }) {
+const Note = ({ id, text, onDelete, onEdit, color }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [newText, setNewText] = useState(text);
+  const [editedText, setEditedText] = useState(text);
 
-  const handleSave = () => {
-    if (newText.trim()) {
-      onEdit(id, newText);
-      setIsEditing(false);
+  const handleEdit = () => {
+    if (isEditing) {
+      onEdit(id, editedText);
     }
+    setIsEditing(!isEditing);
   };
 
+  const backgroundColor = {
+    pink: '#FFE6E6',
+    blue: '#E3F6F5',
+    yellow: '#FFF5BA',
+    green: '#D2F6C5'
+  }[color] || '#FFE6E6';
+
   return (
-    <div className="note">
+    <div className="note" style={{ backgroundColor }}>
       {isEditing ? (
-        <>
-          <textarea
-            value={newText}
-            onChange={(e) => setNewText(e.target.value)}
-          />
-          <button onClick={handleSave}>Save</button>
-        </>
+        <textarea
+          className="edit-textarea"
+          value={editedText}
+          onChange={(e) => setEditedText(e.target.value)}
+        />
       ) : (
-        <>
-          <p>{text}</p>
-          <button onClick={() => onDelete(id)}>X</button>
-          <button onClick={() => setIsEditing(true)}>Edit</button>
-        </>
+        <p>{text}</p>
       )}
+      <div className="note-buttons">
+        <button onClick={handleEdit}>{isEditing ? 'Save' : 'Edit'}</button>
+        <button onClick={() => onDelete(id)}>✕</button>
+      </div>
     </div>
   );
-}
+};
 
 export default Note;
