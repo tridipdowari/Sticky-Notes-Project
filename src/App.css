@@ -13,6 +13,7 @@ body {
 h1 {
   color: #4A4A4A;
   margin-bottom: 1rem;
+  font-size: 2.2rem;
 }
 
 .input-container {
@@ -80,6 +81,11 @@ button:hover {
   flex-direction: column;
   justify-content: space-between;
   min-height: 120px;
+  transition: transform 0.2s ease;
+}
+
+.note:hover {
+  transform: scale(1.02);
 }
 
 .note p {
@@ -107,4 +113,44 @@ button:hover {
   font-size: 14px;
   border: 1px solid #ccc;
   resize: none;
+}
+
+/* ✅ Responsive Layout */
+@media (max-width: 768px) {
+  .input-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  input,
+  .search-bar,
+  select {
+    width: 90%;
+    max-width: 360px;
+  }
+
+  .note-list {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .note {
+    width: 90%;
+    max-width: 360px;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  button {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+  .note button {
+    font-size: 0.75rem;
+  }
 }

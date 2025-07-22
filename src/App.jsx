@@ -1,77 +1,134 @@
-import React, { useState } from 'react';
-import NoteList from './components/NoteList';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
-const App = () => {
+const getRandomColor = (tag) => {
+  const tagColors = {
+    yellow: '#FFF9C4',
+    pink: '#F8BBD0',
+    blue: '#BBDEFB',
+    green: '#C8E6C9',
+  };
+  return tagColors[tag] || '#FFF9C4';
+};
+
+function App() {
   const [notes, setNotes] = useState([]);
-  const [input, setInput] = useState('');
-  const [search, setSearch] = useState('');
-  const [selectedColor, setSelectedColor] = useState('all');
+  const [newNote, setNewNote] = useState('');
+  const [editIndex, setEditIndex] = useState(null);
+  const [editText, setEditText] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedColor, setSelectedColor] = useState('yellow');
+
+  // ✅ Load notes from localStorage on mount
+  useEffect(() => {
+    const savedNotes = localStorage.getItem('stickyNotes');
+    if (savedNotes) {
+      setNotes(JSON.parse(savedNotes));
+    }
+  }, []);
+
+  // ✅ Save notes to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('stickyNotes', JSON.stringify(notes));
+  }, [notes]);
 
   const handleAddNote = () => {
-    if (input.trim() === '') return;
-    const newNote = {
-      id: Date.now(),
-      text: input,
-      color: selectedColor
+    if (newNote.trim() === '') return;
+    const newNoteObj = {
+      text: newNote,
+      color: selectedColor,
     };
-    setNotes([newNote, ...notes]);
-    setInput('');
+    setNotes([...notes, newNoteObj]);
+    setNewNote('');
   };
 
-  const handleDeleteNote = (id) => {
-    setNotes(notes.filter(note => note.id !== id));
+  const handleDeleteNote = (index) => {
+    const updatedNotes = notes.filter((_, i) => i !== index);
+    setNotes(updatedNotes);
   };
 
-  const handleEditNote = (id, newText) => {
-    setNotes(notes.map(note =>
-      note.id === id ? { ...note, text: newText } : note
-    ));
+  const handleEditNote = (index) => {
+    setEditIndex(index);
+    setEditText(notes[index].text);
   };
 
-  const filteredNotes = notes.filter(note => {
-    const matchesSearch = note.text.toLowerCase().includes(search.toLowerCase());
-    const matchesColor = selectedColor === 'all' || note.color === selectedColor;
-    return matchesSearch && matchesColor;
-  });
+  const handleSaveEdit = (index) => {
+    const updatedNotes = [...notes];
+    updatedNotes[index].text = editText;
+    setNotes(updatedNotes);
+    setEditIndex(null);
+    setEditText('');
+  };
+
+  const filteredNotes = notes.filter((note) =>
+    note.text.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="app">
       <h1>Sticky Notes</h1>
+
       <div className="input-container">
         <input
           type="text"
           placeholder="Write a note..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
+          value={newNote}
+          onChange={(e) => setNewNote(e.target.value)}
         />
         <select
           className="color-select"
           value={selectedColor}
           onChange={(e) => setSelectedColor(e.target.value)}
         >
-          <option value="all">All</option>
+          <option value="yellow">Yellow</option>
           <option value="pink">Pink</option>
           <option value="blue">Blue</option>
-          <option value="yellow">Yellow</option>
           <option value="green">Green</option>
         </select>
         <button onClick={handleAddNote}>Add</button>
       </div>
+
       <input
         className="search-bar"
         type="text"
         placeholder="Search notes..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
       />
-      <NoteList
-        notes={filteredNotes}
-        onDelete={handleDeleteNote}
-        onEdit={handleEditNote}
-      />
+
+      <div className="note-list">
+        {filteredNotes.map((note, index) => (
+          <div
+            key={index}
+            className="note"
+            style={{ backgroundColor: getRandomColor(note.color) }}
+          >
+            {editIndex === index ? (
+              <>
+                <textarea
+                  className="edit-textarea"
+                  value={editText}
+                  onChange={(e) => setEditText(e.target.value)}
+                />
+                <div className="note-buttons">
+                  <button onClick={() => handleSaveEdit(index)}>Save</button>
+                  <button onClick={() => setEditIndex(null)}>Cancel</button>
+                </div>
+              </>
+            ) : (
+              <>
+                <p>{note.text}</p>
+                <div className="note-buttons">
+                  <button onClick={() => handleEditNote(index)}>Edit</button>
+                  <button onClick={() => handleDeleteNote(index)}>Delete</button>
+                </div>
+              </>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
-};
+}
 
 export default App;
